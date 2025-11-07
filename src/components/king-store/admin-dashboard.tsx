@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
@@ -86,7 +87,7 @@ function AllTransactionsHistory() {
             {!isLoading && transactions && transactions.length > 0 ? (
               transactions.map((tx, index) => (
                 <TableRow key={index}>
-                  <TableCell className="font-medium">{tx.email}</TableCell>
+                  <TableCell className="font-medium">{tx.username}</TableCell>
                   <TableCell className="font-mono text-xs">{tx.playerId}</TableCell>
                   <TableCell>{tx.gameOfferName} - {tx.gameOfferDescription}</TableCell>
                   <TableCell>{tx.amount.toFixed(0)} ج.س</TableCell>
@@ -393,3 +394,5 @@ export function AdminDashboard() {
     </Card>
   );
 }
+
+    
