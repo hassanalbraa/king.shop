@@ -63,6 +63,7 @@ interface AppContextType {
   updateOfferPrice: (offerId: string, newPrice: number) => void;
   addOffer: (offer: NewGameOffer) => Promise<void>;
   deleteOffer: (offerId: string) => Promise<void>;
+  deleteUser: (userId: string) => Promise<void>;
   changePassword: (newPassword: string) => void;
   purchaseOffer: (offerId: string, playerId: string) => { success: boolean; message: string };
 }
@@ -301,6 +302,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
 };
 
+  const deleteUser = async (userId: string) => {
+    if (!firestore) {
+      throw new Error("Firestore not available");
+    }
+    const userDocRef = doc(firestore, 'users', userId);
+    try {
+      await deleteDoc(userDocRef);
+      // Note: This does not delete the user from Firebase Authentication.
+      // That would require a backend function for security reasons.
+    } catch (error) {
+      const permissionError = new FirestorePermissionError({
+        path: userDocRef.path,
+        operation: 'delete',
+      });
+      errorEmitter.emit('permission-error', permissionError);
+      throw permissionError;
+    }
+  };
+
   
   const changePassword = (newPassword: string) => {
     if (auth.currentUser) {
@@ -384,6 +404,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateOfferPrice,
     addOffer,
     deleteOffer,
+    deleteUser,
     changePassword,
     purchaseOffer,
   };
