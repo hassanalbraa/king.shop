@@ -1,0 +1,58 @@
+{
+  "placeholderImages": [
+    {
+      "id": "game-1",
+      "description": "شعار فري فاير",
+      "imageUrl": "https://images.unsplash.com/photo-1690983995839-33157b43d2b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmcmVlZmlyZSUyMGxvZ298ZW58MHx8fHwxNzM1MzgwMTMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "freefire logo"
+    },
+    {
+      "id": "game-pubg",
+      "description": "PUBG game",
+      "imageUrl": "https://images.unsplash.com/photo-1579362359491-195b0f279165?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwdWJnJTIwZ2FtZXxlbnwwfHx8fDE3NjI0NjU2NjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pubg game"
+    },
+    {
+      "id": "game-garena",
+      "description": "Garena game codes",
+      "imageUrl": "https://images.unsplash.com/photo-1542751371-331571406d40?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnYW1lJTIwY29kZXN8ZW58MHx8fHwxNzYyNDY1NjkzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "game codes"
+    },
+    {
+      "id": "game-tiktok",
+      "description": "TikTok coins",
+      "imageUrl": "https://images.unsplash.com/photo-1611162616475-46b635cb6868?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0aWt0b2slMjBsb2dvfGVufDB8fHx8MTc2MjQ2NTczMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "tiktok logo"
+    },
+    {
+      "id": "game-2",
+      "description": "fantasy world game",
+      "imageUrl": "https://images.unsplash.com/photo-1696816972148-60ba34ebd383?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmYW50YXN5JTIwd29ybGR8ZW58MHx8fHwxNzYyNDM3Mzc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy world"
+    },
+    {
+      "id": "game-3",
+      "description": "racing car game",
+      "imageUrl": "https://images.unsplash.com/photo-1626968835249-98e09ff6a994?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxyYWNpbmclMjBjYXJ8ZW58MHx8fHwxNzYyMzkzNDE4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "racing car"
+    },
+    {
+      "id": "game-4",
+      "description": "soccer match game",
+      "imageUrl": "https://images.unsplash.com/photo-1508088062105-17d61307629d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzb2NjZXIlMjBtYXRjaHxlbnwwfHx8fDE3NjI0MzM3NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "soccer match"
+    },
+    {
+      "id": "game-5",
+      "description": "space exploration game",
+      "imageUrl": "https://images.unsplash.com/photo-1614726365930-627c75da663e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzcGFjZSUyMGV4cGxvcmF0aW9ufGVufDB8fHx8MTc2MjM4MTcwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "space exploration"
+    },
+    {
+      "id": "game-6",
+      "description": "adventure puzzle game",
+      "imageUrl": "https://images.unsplash.com/photo-1622617760286-e11b543f5ab7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxhZHZlbnR1cmUlMjBwdXp6bGV8ZW58MHx8fHwxNzYyNDU3MzI1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "adventure puzzle"
+    }
+  ]
+}
