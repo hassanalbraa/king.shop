@@ -1,0 +1,205 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the KING STORE application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user entity."
+        },
+        "username": {
+          "type": "string",
+          "description": "The username of the user."
+        },
+        "balance": {
+          "type": "number",
+          "description": "The current balance of the user's account."
+        },
+        "isAdmin": {
+          "type": "boolean",
+          "description": "Indicates whether the user has admin privileges."
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "balance",
+        "isAdmin"
+      ]
+    },
+    "GameOffer": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "GameOffer",
+      "type": "object",
+      "description": "Represents a game offer available in the KING STORE.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the game offer entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the game offer."
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the game offer."
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the game offer."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the image representing the game offer."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "price",
+        "description",
+        "imageUrl"
+      ]
+    },
+    "Transaction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Transaction",
+      "type": "object",
+      "description": "Represents a transaction made by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the transaction entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Transaction)"
+        },
+        "gameOfferId": {
+          "type": "string",
+          "description": "Reference to GameOffer. (Relationship: GameOffer 1:N Transaction)"
+        },
+        "transactionDate": {
+          "type": "string",
+          "description": "The date and time of the transaction.",
+          "format": "date-time"
+        },
+        "amount": {
+          "type": "number",
+          "description": "The amount of the transaction."
+        },
+        "playerId": {
+          "type": "string",
+          "description": "The player's in-game ID for manual fulfillment."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "gameOfferId",
+        "transactionDate",
+        "amount",
+        "playerId"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles. Includes userId as a parameter for path-based ownership.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/transactions/{transactionId}",
+        "definition": {
+          "entityName": "Transaction",
+          "schema": {
+            "$ref": "#/backend/entities/Transaction"
+          },
+          "description": "Stores transactions made by each user. Transactions are nested under the user's document, providing path-based ownership. Includes userId and transactionId as parameters.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "transactionId",
+              "description": "The unique identifier for the transaction."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/game_offers/{gameOfferId}",
+        "definition": {
+          "entityName": "GameOffer",
+          "schema": {
+            "$ref": "#/backend/entities/GameOffer"
+          },
+          "description": "Stores game offers available in the store.",
+          "params": [
+            {
+              "name": "gameOfferId",
+              "description": "The unique identifier for the game offer."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{uid}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores admin role assignments. Existence of a document at this path grants admin privileges.",
+          "params": [
+            {
+              "name": "uid",
+              "description": "The unique identifier for the user (Firebase UID)."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/transactions/{transactionId}",
+        "definition": {
+          "entityName": "Transaction",
+          "schema": {
+            "$ref": "#/backend/entities/Transaction"
+          },
+          "description": "Stores a flat list of all transactions for admin auditing purposes.",
+          "params": [
+            {
+              "name": "transactionId",
+              "description": "The unique identifier for the transaction."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to support the KING STORE application's requirements, focusing on user authentication, offer management, and administrative functionalities. Authorization Independence is achieved by storing user roles in a dedicated collection (`/roles_admin/{uid}`) and by using path-based ownership for user-specific data (transactions under `/users/{userId}/transactions/{transactionId}`). This avoids the need for `get()` calls in security rules. Segregation is maintained by separating admin role assignments from user data and game offer data. The addition of a flat `/transactions/{transactionId}` collection simplifies admin auditing, allowing admins to list all transactions with a single, efficient query, rather than a collection group query. This approach supports the required QAPs by ensuring secure `list` operations within each collection, as the security rules can be tailored to the specific data and access patterns of each collection.\n\nThe `/users/{userId}` collection stores user profiles. User-specific transactions are located under `/users/{userId}/transactions/{transactionId}`. Game offers are stored in the `/game_offers/{gameOfferId}` collection. Admin roles are managed in the `/roles_admin/{uid}` collection.\n\nThis structure ensures that authorization checks are straightforward and efficient, promoting scalability and maintainability. The use of descriptive path names and a consistent naming convention enhances debuggability."
+  }
+}
