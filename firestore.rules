@@ -1,20 +1,18 @@
-
 /**
  * @fileoverview Firestore Security Rules for KING STORE application.
  *
  * Core Philosophy:
- * This ruleset enforces a user-ownership model for user profiles and transactions,
- * with administrative privileges managed through a dedicated roles collection.
- * Game offers are publicly readable.
+ * Enforces a user-ownership model for user profiles and transactions,
+ * with administrative privileges through /roles_admin/{uid}.
+ * Game offers are public, and orders can be created by users but viewed only by admins.
  *
  * Data Structure:
- * - /users/{userId}: Stores user profiles. Each user can only access their own profile.
- * - /users/{userId}/transactions/{transactionId}: Stores transactions for each user.
- *   Each user can only access their own transactions.
- * - /game_offers/{gameOfferId}: Stores game offers. These are publicly readable.
- * - /roles_admin/{uid}: Indicates admin privileges. If a document exists for a user's
- *   UID in this collection, they are considered an admin.
- * - /transactions/{transactionId}: A flat collection of all transactions for admin auditing.
+ * - /users/{userId}
+ * - /users/{userId}/transactions/{transactionId}
+ * - /game_offers/{gameOfferId}
+ * - /roles_admin/{uid}
+ * - /transactions/{transactionId}
+ * - /orders/{orderId}
  */
 rules_version = '2';
 service cloud.firestore {
@@ -29,32 +27,26 @@ service cloud.firestore {
     }
 
     function isDataOwner(data) {
-        return isSignedIn() && request.auth.uid == data.id;
+      return isSignedIn() && request.auth.uid == data.id;
     }
-    
+
     function isAdmin() {
       return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
     }
 
-    /**
-     * @description Allows users to manage their own profiles.
-     * @path /users/{userId}
-     */
+    /** Users collection */
     match /users/{userId} {
       allow get: if isOwner(userId) || isAdmin();
       allow list: if isAdmin();
       allow create: if isOwner(userId);
       allow update: if isOwner(userId) || isAdmin();
-      allow delete: if false; // Deleting user profiles from the client is disabled.
+      allow delete: if false;
     }
 
-    /**
-     * @description Allows users to manage their own transactions.
-     * @path /users/{userId}/transactions/{transactionId}
-     */
+    /** Transactions under each user */
     match /users/{userId}/transactions/{transactionId} {
       function isExistingOwner(userId) {
-          return isOwner(userId) && resource != null;
+        return isOwner(userId) && resource != null;
       }
 
       allow get: if isOwner(userId) || isAdmin();
@@ -63,41 +55,32 @@ service cloud.firestore {
       allow update: if isExistingOwner(userId) && resource.data.userId == request.resource.data.userId;
       allow delete: if isExistingOwner(userId);
     }
-    
-    /**
-     * @description Allows public read access to game offers, but restricts write access.
-     * @path /game_offers/{gameOfferId}
-     */
+
+    /** Public game offers */
     match /game_offers/{gameOfferId} {
       allow get: if true;
       allow list: if true;
-      allow create: if isAdmin();
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
+      allow create, update, delete: if isAdmin();
     }
 
-    /**
-     * @description Grants admin privileges based on the existence of a document in this collection.
-     * @path /roles_admin/{uid}
-     */
+    /** Admin roles */
     match /roles_admin/{uid} {
       allow get: if isAdmin() && request.auth.uid == uid;
-      allow list: if false;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+      allow list, create, update, delete: if false;
     }
 
-    /**
-     * @description A flat collection for admins to view all transactions.
-     * @path /transactions/{transactionId}
-     */
+    /** Flat admin-accessible transactions */
     match /transactions/{transactionId} {
-        allow get: if isAdmin();
-        allow list: if isAdmin();
-        allow create: if isSignedIn(); // Allow any signed-in user to create a transaction log entry
-        allow update: if false;
-        allow delete: if false;
+      allow get, list: if isAdmin();
+      allow create: if isSignedIn();
+      allow update, delete: if false;
+    }
+
+    /** Orders collection (for user orders and admin review) */
+    match /orders/{orderId} {
+      allow create: if isSignedIn();
+      allow get, list: if isAdmin();
+      allow update, delete: if false;
     }
   }
 }
